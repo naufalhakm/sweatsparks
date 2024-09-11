@@ -5,13 +5,6 @@ import (
 	"time"
 )
 
-type Gender string
-
-const (
-	Male   Gender = "male"
-	Female Gender = "female"
-)
-
 type Photo struct {
 	Id         uint64
 	UserID     uint64
@@ -24,7 +17,7 @@ type Profile struct {
 	UserID           uint64
 	FirstName        string
 	LastName         string
-	Gender           Gender
+	Gender           string
 	GenderPreference time.Time
 	BirthDate        time.Time
 	Bio              string

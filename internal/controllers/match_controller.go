@@ -39,15 +39,17 @@ func (controller *MatchControllerImpl) CreateMatch(w http.ResponseWriter, r *htt
 		return
 	}
 
-	match, err := controller.MatchService.CreateMatchUser(context.Background(), &req)
+	_, err := controller.MatchService.CreateMatchUser(context.Background(), &req)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(match)
+	resp := response.CreatedSuccessWithPayload("Success create new a match")
+
+	w.WriteHeader(resp.StatusCode)
+	json.NewEncoder(w).Encode(resp)
 }
 
 func (controller *MatchControllerImpl) GetDetailMatchUser(w http.ResponseWriter, r *http.Request) {
@@ -72,8 +74,10 @@ func (controller *MatchControllerImpl) GetDetailMatchUser(w http.ResponseWriter,
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(match)
+	resp := response.GeneralSuccessCustomMessageAndPayload("Success get detail match", match)
+
+	w.WriteHeader(resp.StatusCode)
+	json.NewEncoder(w).Encode(resp)
 }
 
 func (controller *MatchControllerImpl) GetAllMatchUser(w http.ResponseWriter, r *http.Request) {
@@ -94,6 +98,8 @@ func (controller *MatchControllerImpl) GetAllMatchUser(w http.ResponseWriter, r 
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(match)
+	resp := response.GeneralSuccessCustomMessageAndPayload("Success get all match", match)
+
+	w.WriteHeader(resp.StatusCode)
+	json.NewEncoder(w).Encode(resp)
 }

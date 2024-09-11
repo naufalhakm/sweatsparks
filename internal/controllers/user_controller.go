@@ -35,15 +35,17 @@ func (controller *UserControllerImpl) Register(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	user, err := controller.UserService.RegisterUser(context.Background(), &req)
+	_, err := controller.UserService.RegisterUser(context.Background(), &req)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(user)
+	resp := response.CreatedSuccessWithPayload("Success register new user")
+
+	w.WriteHeader(resp.StatusCode)
+	json.NewEncoder(w).Encode(resp)
 }
 
 func (controller *UserControllerImpl) Login(w http.ResponseWriter, r *http.Request) {
@@ -63,9 +65,12 @@ func (controller *UserControllerImpl) Login(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(user)
+	resp := response.GeneralSuccessCustomMessageAndPayload("Success login user", user)
+
+	w.WriteHeader(resp.StatusCode)
+	json.NewEncoder(w).Encode(resp)
 }
+
 func (controller *UserControllerImpl) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	user, err := controller.UserService.GetAllUser(context.Background())
