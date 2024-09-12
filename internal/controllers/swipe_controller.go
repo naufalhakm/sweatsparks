@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -38,7 +37,7 @@ func (controller *SwipeControllerImpl) CreateSwipe(w http.ResponseWriter, r *htt
 		return
 	}
 
-	_, err := controller.SwipeService.CreateSwipe(context.Background(), &req)
+	_, err := controller.SwipeService.CreateSwipe(r.Context(), &req)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -60,7 +59,7 @@ func (controller *SwipeControllerImpl) GetSwipeDetail(w http.ResponseWriter, r *
 	swipeeIDStr := vars["swiperID"]
 	swipeeID, _ := strconv.Atoi(swipeeIDStr)
 
-	result, err := controller.SwipeService.GetSwipeBySwiperAndSwipee(context.Background(), swiperID, swipeeID)
+	result, err := controller.SwipeService.GetSwipeBySwiperAndSwipee(r.Context(), swiperID, swipeeID)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -79,7 +78,7 @@ func (controller *SwipeControllerImpl) GetSwipeAll(w http.ResponseWriter, r *htt
 	swipeeIDStr := vars["swiperID"]
 	swipeeID, _ := strconv.Atoi(swipeeIDStr)
 
-	result, err := controller.SwipeService.GetAllSwipeeNotMatchBySwipee(context.Background(), swipeeID)
+	result, err := controller.SwipeService.GetAllSwipeeNotMatchBySwipee(r.Context(), swipeeID)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)

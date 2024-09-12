@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"sweatsparks/internal/commons/response"
@@ -35,7 +34,7 @@ func (controller *UserControllerImpl) Register(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	_, err := controller.UserService.RegisterUser(context.Background(), &req)
+	_, err := controller.UserService.RegisterUser(r.Context(), &req)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -58,7 +57,7 @@ func (controller *UserControllerImpl) Login(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	user, err := controller.UserService.LoginUser(context.Background(), &req)
+	user, err := controller.UserService.LoginUser(r.Context(), &req)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -73,7 +72,7 @@ func (controller *UserControllerImpl) Login(w http.ResponseWriter, r *http.Reque
 
 func (controller *UserControllerImpl) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	user, err := controller.UserService.GetAllUser(context.Background())
+	user, err := controller.UserService.GetAllUser(r.Context())
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)

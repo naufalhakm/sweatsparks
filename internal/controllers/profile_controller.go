@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -23,6 +22,12 @@ type ProfileControllerImpl struct {
 	ProfileService services.ProfileService
 }
 
+func NewProfileController(profileService services.ProfileService) ProfileController {
+	return &ProfileControllerImpl{
+		ProfileService: profileService,
+	}
+}
+
 func (controller *ProfileControllerImpl) CreateProfile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var req params.ProfileRequest
@@ -33,7 +38,7 @@ func (controller *ProfileControllerImpl) CreateProfile(w http.ResponseWriter, r 
 		return
 	}
 
-	_, err := controller.ProfileService.CreateProfileUser(context.Background(), &req)
+	_, err := controller.ProfileService.CreateProfileUser(r.Context(), &req)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -51,7 +56,7 @@ func (controller *ProfileControllerImpl) GetDetailProfile(w http.ResponseWriter,
 	vars := mux.Vars(r)
 	userIDStr := vars["userID"]
 	userID, _ := strconv.Atoi(userIDStr)
-	result, err := controller.ProfileService.GetProfileUser(context.Background(), userID)
+	result, err := controller.ProfileService.GetProfileUser(r.Context(), userID)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -73,7 +78,7 @@ func (controller *ProfileControllerImpl) GetAllProfile(w http.ResponseWriter, r 
 	location := vars["location"]
 
 	gender := vars["gender"]
-	result, err := controller.ProfileService.GetAllProfileUser(context.Background(), userID, gender, location)
+	result, err := controller.ProfileService.GetAllProfileUser(r.Context(), userID, gender, location)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -95,7 +100,7 @@ func (controller *ProfileControllerImpl) UpdateProfile(w http.ResponseWriter, r 
 		return
 	}
 
-	_, err := controller.ProfileService.UpdateProfileUser(context.Background(), &req)
+	_, err := controller.ProfileService.UpdateProfileUser(r.Context(), &req)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)

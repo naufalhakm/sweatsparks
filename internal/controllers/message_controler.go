@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -32,7 +31,7 @@ func (controller *MessageControllerImpl) GetMessageByMatchID(w http.ResponseWrit
 	matchIDStr := vars["matchID"]
 	matchID, _ := strconv.Atoi(matchIDStr)
 
-	message, err := controller.MessageService.GetMessageByMatchId(context.Background(), matchID)
+	message, err := controller.MessageService.GetMessageByMatchId(r.Context(), matchID)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)

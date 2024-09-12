@@ -24,7 +24,7 @@ type SwipeServiceImpl struct {
 	SwipeRepository repositories.SwipeRepository
 }
 
-func NewSwipeRepository(db *sql.DB, swipeRepository repositories.SwipeRepository) SwipeService {
+func NewSwipeService(db *sql.DB, swipeRepository repositories.SwipeRepository) SwipeService {
 	return &SwipeServiceImpl{
 		MySqlDB:         db,
 		SwipeRepository: swipeRepository,

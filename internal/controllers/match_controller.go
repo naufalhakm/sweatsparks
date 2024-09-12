@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -39,7 +38,7 @@ func (controller *MatchControllerImpl) CreateMatch(w http.ResponseWriter, r *htt
 		return
 	}
 
-	_, err := controller.MatchService.CreateMatchUser(context.Background(), &req)
+	_, err := controller.MatchService.CreateMatchUser(r.Context(), &req)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -67,7 +66,7 @@ func (controller *MatchControllerImpl) GetDetailMatchUser(w http.ResponseWriter,
 	userIDStr := vars["userID"]
 	userID2, _ := strconv.Atoi(userIDStr)
 
-	match, err := controller.MatchService.FindMatchDetailByUserID(context.Background(), int(userID), userID2)
+	match, err := controller.MatchService.FindMatchDetailByUserID(r.Context(), int(userID), userID2)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
@@ -91,7 +90,7 @@ func (controller *MatchControllerImpl) GetAllMatchUser(w http.ResponseWriter, r 
 		return
 	}
 
-	match, err := controller.MatchService.FindMatchAllByUserID(context.Background(), int(userID))
+	match, err := controller.MatchService.FindMatchAllByUserID(r.Context(), int(userID))
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
