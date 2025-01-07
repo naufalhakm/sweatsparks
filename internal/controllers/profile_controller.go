@@ -14,7 +14,7 @@ import (
 type ProfileController interface {
 	CreateProfile(w http.ResponseWriter, r *http.Request)
 	GetDetailProfile(w http.ResponseWriter, r *http.Request)
-	GetAllProfile(w http.ResponseWriter, r *http.Request)
+	GetAllRecomendationUsers(w http.ResponseWriter, r *http.Request)
 	UpdateProfile(w http.ResponseWriter, r *http.Request)
 }
 
@@ -68,24 +68,47 @@ func (controller *ProfileControllerImpl) GetDetailProfile(w http.ResponseWriter,
 	json.NewEncoder(w).Encode(resp)
 }
 
-func (controller *ProfileControllerImpl) GetAllProfile(w http.ResponseWriter, r *http.Request) {
+func (controller *ProfileControllerImpl) GetAllRecomendationUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	vars := mux.Vars(r)
 	userIDStr := vars["userID"]
 	userID, _ := strconv.Atoi(userIDStr)
 
-	location := vars["location"]
+	pageStr := vars["page"]
+	page, _ := strconv.Atoi(pageStr)
 
-	gender := vars["gender"]
-	result, err := controller.ProfileService.GetAllProfileUser(r.Context(), userID, gender, location)
+	limitStr := vars["limit"]
+	limit, _ := strconv.Atoi(limitStr)
+
+	pageNum := 1
+	limitSize := 5
+
+	if page > 0 {
+		pageNum = page
+	}
+
+	if limit > 0 {
+		limitSize = limit
+	}
+
+	result, pagination, err := controller.ProfileService.GetUserRecomendation(r.Context(), userID, pageNum, limitSize)
 	if err != nil {
 		w.WriteHeader(err.StatusCode)
 		json.NewEncoder(w).Encode(err)
 		return
 	}
 
-	resp := response.GeneralSuccessCustomMessageAndPayload("Success get all detail profile", result)
+	type Response struct {
+		Users      interface{} `json:"users"`
+		Pagination interface{} `json:"pagination"`
+	}
+
+	var responses Response
+	responses.Users = result
+	responses.Pagination = pagination
+
+	resp := response.GeneralSuccessCustomMessageAndPayload("Success get all recomendation users", responses)
 	w.WriteHeader(resp.StatusCode)
 	json.NewEncoder(w).Encode(resp)
 }

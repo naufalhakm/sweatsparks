@@ -22,7 +22,7 @@ func RegisterRoutes(db *sql.DB, router *mux.Router, hub *websockets.Hub, provide
 	protected.HandleFunc("/matches", provider.MatchProvider.GetAllMatchUser).Methods("GET")
 	protected.HandleFunc("/matches/{userID}", provider.MatchProvider.GetDetailMatchUser).Methods("GET")
 
-	protected.HandleFunc("/profiles", provider.ProfileProvider.GetAllProfile).Methods("GET")
+	protected.HandleFunc("/profiles", provider.ProfileProvider.GetAllRecomendationUsers).Methods("GET")
 	protected.HandleFunc("/profiles", provider.ProfileProvider.CreateProfile).Methods("POST")
 	protected.HandleFunc("/profiles/{userID}", provider.ProfileProvider.GetDetailProfile).Methods("GET")
 	protected.HandleFunc("/profiles/{userID}", provider.ProfileProvider.UpdateProfile).Methods("PATCH")

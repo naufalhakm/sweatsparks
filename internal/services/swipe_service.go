@@ -20,13 +20,13 @@ type SwipeService interface {
 }
 
 type SwipeServiceImpl struct {
-	MySqlDB         *sql.DB
+	SqlDB           *sql.DB
 	SwipeRepository repositories.SwipeRepository
 }
 
 func NewSwipeService(db *sql.DB, swipeRepository repositories.SwipeRepository) SwipeService {
 	return &SwipeServiceImpl{
-		MySqlDB:         db,
+		SqlDB:           db,
 		SwipeRepository: swipeRepository,
 	}
 }
@@ -38,7 +38,7 @@ func (service *SwipeServiceImpl) CreateSwipe(ctx context.Context, req *params.Sw
 		return nil, response.BadRequestError()
 	}
 
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}
@@ -65,7 +65,7 @@ func (service *SwipeServiceImpl) CreateSwipe(ctx context.Context, req *params.Sw
 }
 
 func (service *SwipeServiceImpl) GetSwipeBySwiperAndSwipee(ctx context.Context, swiper, swipee int) (*params.SwipeResponse, *response.CustomError) {
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}
@@ -86,7 +86,7 @@ func (service *SwipeServiceImpl) GetSwipeBySwiperAndSwipee(ctx context.Context, 
 }
 
 func (service *SwipeServiceImpl) GetAllSwipeeNotMatchBySwipee(ctx context.Context, swipee int) ([]*params.SwipeResponse, *response.CustomError) {
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}

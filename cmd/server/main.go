@@ -14,7 +14,7 @@ import (
 
 func main() {
 	config.LoadConfig()
-	mysqlDB, err := database.NewMySQLClient()
+	psqlDB, err := database.NewPqSQLClient()
 	if err != nil {
 		log.Fatal("Could not connect to MySQL:", err)
 	}
@@ -23,8 +23,8 @@ func main() {
 	hub := websockets.NewHub()
 	go hub.Run()
 
-	provider := factory.InitFactory(mysqlDB)
-	routes.RegisterRoutes(mysqlDB, router, hub, provider)
+	provider := factory.InitFactory(psqlDB)
+	routes.RegisterRoutes(psqlDB, router, hub, provider)
 
 	log.Printf("Server running on :%s\n", config.ENV.ServerPort)
 	log.Fatal(http.ListenAndServe(":"+config.ENV.ServerPort, router))

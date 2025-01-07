@@ -22,13 +22,13 @@ type UserService interface {
 }
 
 type UserServiceImpl struct {
-	MySqlDB        *sql.DB
+	SqlDB          *sql.DB
 	UserRepository repositories.UserRepository
 }
 
 func NeewUserService(mySql *sql.DB, userRepository repositories.UserRepository) UserService {
 	return &UserServiceImpl{
-		MySqlDB:        mySql,
+		SqlDB:          mySql,
 		UserRepository: userRepository,
 	}
 }
@@ -40,7 +40,7 @@ func (service *UserServiceImpl) RegisterUser(ctx context.Context, req *params.Us
 		return nil, response.BadRequestError()
 	}
 
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}
@@ -94,7 +94,7 @@ func (service *UserServiceImpl) LoginUser(ctx context.Context, req *params.UserL
 		return nil, response.BadRequestError()
 	}
 
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}
@@ -123,7 +123,7 @@ func (service *UserServiceImpl) LoginUser(ctx context.Context, req *params.UserL
 }
 func (service *UserServiceImpl) GetAllUser(ctx context.Context) ([]*params.GetAllUser, *response.CustomError) {
 
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}

@@ -20,13 +20,13 @@ type MatchService interface {
 }
 
 type MatchServiceImpl struct {
-	MySqlDB         *sql.DB
+	SqlDB           *sql.DB
 	MatchRepository repositories.MatchRepository
 }
 
 func NewMatchService(db *sql.DB, matchRepository repositories.MatchRepository) MatchService {
 	return &MatchServiceImpl{
-		MySqlDB:         db,
+		SqlDB:           db,
 		MatchRepository: matchRepository,
 	}
 }
@@ -38,7 +38,7 @@ func (service *MatchServiceImpl) CreateMatchUser(ctx context.Context, req *param
 		return nil, response.BadRequestError()
 	}
 
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}
@@ -69,7 +69,7 @@ func (service *MatchServiceImpl) CreateMatchUser(ctx context.Context, req *param
 }
 
 func (service *MatchServiceImpl) FindMatchDetailByUserID(ctx context.Context, userID1, UserID2 int) (*params.MatchDetailResponse, *response.CustomError) {
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}
@@ -89,7 +89,7 @@ func (service *MatchServiceImpl) FindMatchDetailByUserID(ctx context.Context, us
 }
 
 func (service *MatchServiceImpl) FindMatchAllByUserID(ctx context.Context, userID int) ([]*params.MatchDetailResponse, *response.CustomError) {
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}

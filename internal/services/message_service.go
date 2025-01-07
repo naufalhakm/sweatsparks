@@ -14,19 +14,19 @@ type MessageService interface {
 }
 
 type MessageServiceImpl struct {
-	MySqlDB           *sql.DB
+	SqlDB             *sql.DB
 	MessageRepository repositories.MessageRepository
 }
 
 func NewMessageService(db *sql.DB, messageRepository repositories.MessageRepository) MessageService {
 	return &MessageServiceImpl{
-		MySqlDB:           db,
+		SqlDB:             db,
 		MessageRepository: messageRepository,
 	}
 }
 
 func (service *MessageServiceImpl) GetMessageByMatchId(ctx context.Context, id int) ([]*params.MessageResponse, *response.CustomError) {
-	tx, err := service.MySqlDB.Begin()
+	tx, err := service.SqlDB.Begin()
 	if err != nil {
 		return nil, response.GeneralErrorWithAdditionalInfo("Failed Connection to MySQL Errors: %s", err.Error())
 	}
